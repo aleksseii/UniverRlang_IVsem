@@ -107,6 +107,7 @@ f_div
 
 # part 2.3 ------------------------------------------------------------------
 
+# task 1
 step <- 1 # Шаг сетки
 dekart_begin <- -5 # Начало сетки
 dekart_end <- 5 # Конец сетки
@@ -121,3 +122,93 @@ surface_matrix <- outer(X = x,
                         FUN = function(x, y) Re(exp(-1i * 0.5 * x * y)))
 dimnames(surface_matrix) <- list(x, y)
 
+summary_path <- "practicals/practical_1/tasks_2/summary.txt"
+
+write(paste("number of matrix elements:", nrow(surface_matrix) * ncol(surface_matrix)), summary_path, append = TRUE, )
+write(paste("number of rows:", nrow(surface_matrix)), summary_path, append = TRUE)
+write(paste("number of cols:", ncol(surface_matrix)), summary_path, append = TRUE)
+write(paste("sum of main diag elements:", sum(diag(surface_matrix))), summary_path, append = TRUE)
+write(paste("sum of middle row elements:", sum(surface_matrix["0", ])), summary_path, append = TRUE)
+write(paste("sum of middle column elements:", sum(surface_matrix[, "0"])), summary_path, append = TRUE)
+write(paste("row sums:", rowSums(surface_matrix)), summary_path, append = TRUE)
+write(paste("col sums:", colSums(surface_matrix)), summary_path, append = TRUE)
+
+
+# task 2
+dekart_begin <- as.numeric(readline(prompt = "Enter start: ")) # Начало сетки
+dekart_end <- as.numeric(readline(prompt = "Enter end: ")) # Конец сетки
+step <- as.numeric(readline(prompt = "Enter step: ")) # Шаг сетки
+
+x <- seq(from = dekart_begin, to = dekart_end, by = step)
+y <- x
+custom_matrix <- outer(X = x,
+                       Y = y,
+                       FUN = function(x, y) Re(exp(-1i * 0.5 * x * y)))
+dimnames(custom_matrix) <- list(x, y)
+
+summary_2_path <- "practicals/practical_1/tasks_2/summary2.txt"
+
+write(paste("number of matrix elements:", nrow(custom_matrix) * ncol(custom_matrix)), summary_2_path, append = TRUE)
+write(paste("number of rows:", nrow(custom_matrix)), summary_2_path, append = TRUE)
+write(paste("number of cols:", ncol(custom_matrix)), summary_2_path, append = TRUE)
+write(paste("sum of main diag elements:", sum(diag(custom_matrix))), summary_2_path, append = TRUE)
+write(paste("row sums:", rowSums(custom_matrix)), summary_2_path, append = TRUE)
+write(paste("col sums:", colSums(custom_matrix)), summary_2_path, append = TRUE)
+
+# task 3
+sizes <- as.numeric(unlist(read.table("practicals/practical_1/tasks_2/inputs.txt")))
+
+n_begin <- sizes[1]
+n_end<- sizes[2]
+n_step <- sizes[3]
+
+m_begin <- sizes[4]
+m_end<- sizes[5]
+m_step <- sizes[6]
+
+x <- seq(from = n_begin, to = n_end, by = n_step)
+y <- seq(from = m_begin, to = m_end, by = m_step)
+
+non_squared_matrix <- outer(X = x,
+                            Y = y,
+                            FUN = function(x, y) Re(exp(-1i * 0.5 * x * y)))
+
+summary_3_path <- "practicals/practical_1/tasks_2/summary3.txt"
+dimnames(non_squared_matrix) <- list(x, y)
+
+write(paste("number of matrix elements:", nrow(non_squared_matrix) * ncol(non_squared_matrix)), summary_3_path, append = TRUE)
+write(paste("number of rows:", nrow(non_squared_matrix)), summary_3_path, append = TRUE)
+write(paste("number of cols:", ncol(non_squared_matrix)), summary_3_path, append = TRUE)
+write(paste("sum of main diag elements:", sum(diag(non_squared_matrix))), summary_3_path, append = TRUE)
+write(paste("row sums:", rowSums(non_squared_matrix)), summary_3_path, append = TRUE)
+write(paste("col sums:", colSums(non_squared_matrix)), summary_3_path, append = TRUE)
+
+
+# part 2.4 ------------------------------------------------------------------
+# Cars
+
+cars_matrix <- as.matrix(cars)
+cars_speed <- cbind(c(1), cars_matrix[, 1])
+cars_dist <- cars_matrix[, 2]
+
+alpha <- solve(t(cars_speed) %*% cars_speed) %*% t(cars_speed) %*% cars_dist
+class(alpha)
+alpha <- as.vector(alpha)
+class(alpha)
+
+alpha_c <- alpha[1]
+alpha_x <- alpha[2]
+
+print(paste("alpha_c =", alpha_c))
+print(paste("alpha_x =", alpha_x))
+
+cars_speed_lm <- cars_matrix[, 1]
+cars_dist_lm <- alpha_c + cars_speed_lm * alpha_x
+
+dist_residuals <- cars_dist_lm - cars_dist
+
+avg <- sum(dist_residuals) / length(dist_residuals)
+avg
+
+std <- (sum((dist_residuals - avg) ^ 2) / length(dist_residuals)) ^ 0.5
+std

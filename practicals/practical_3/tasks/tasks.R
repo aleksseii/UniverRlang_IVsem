@@ -1,5 +1,6 @@
+# part 3.1 -----------------------------------------------------------
+
 Sys.setlocale("LC_ALL","ru_RU")
-print("привет")
 
 gas_data_path <- 'https://raw.githubusercontent.com/qwerty29544/RpracticeBook/master/2Data/01FlatTables/GAZ.csv'
 df <- read.csv(gas_data_path, header = T, sep = '\t', dec = ',', encoding = "UTF-8")
